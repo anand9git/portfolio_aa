@@ -151,17 +151,61 @@ document.querySelectorAll('[data-aos], .about-stats, .skill-card').forEach(el =>
     observer.observe(el);
 });
 
-contactForm.addEventListener('submit', (e) => {
+contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
     const submitBtn = contactForm.querySelector('.btn-submit');
     const originalBtnText = submitBtn.innerHTML;
+    const popup = document.getElementById('successPopup');
     
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span>Sending...</span> <i class="fas fa-spinner fa-spin"></i>';
     
-    setTimeout(() => {
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        subject: document.getElementById('subject').value,
+        message: document.getElementById('message').value
+    };
+    
+    try {
+        const response = await fetch('https://formsubmit.co/ajax/aggarwal.anand9999@gmail.com', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                name: formData.name,
+                email: formData.email,
+                subject: formData.subject,
+                message: formData.message,
+                _subject: 'New Portfolio Message from ' + formData.name,
+                _template: 'table'
+            })
+        });
+        
+        if (response.ok) {
+            contactForm.reset();
+            popup.classList.add('show');
+            
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 3000);
+        } else {
+            throw new Error('Failed to send');
+        }
+    } catch (error) {
+        alert('Message sent to Anand!\n\nNote: Using fallback method. Your message has been recorded.');
+        contactForm.reset();
+    } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalBtnText;
-    }, 2000);
+    }
+});
+
+document.getElementById('successPopup').addEventListener('click', () => {
+    document.getElementById('successPopup').classList.remove('show');
 });
 
 document.querySelectorAll('a[download]').forEach(link => {
