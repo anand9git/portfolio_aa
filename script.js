@@ -311,7 +311,18 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.querySelectorAll('[data-aos]').forEach(el => el.removeAttribute('data-aos'));
 }
 
+async function updateVisitorCount() {
+    try {
+        const response = await fetch('https://api.countapi.xyz/hit/anandaggarwal-portfolio/visits');
+        const data = await response.json();
+        document.getElementById('visitorCount').textContent = data.value;
+    } catch (error) {
+        document.getElementById('visitorCount').textContent = '---';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🎨 Portfolio initialized');
     updateActiveNavLink();
+    updateVisitorCount();
 });

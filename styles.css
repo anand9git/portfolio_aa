@@ -1236,6 +1236,20 @@ section {
     color: var(--accent);
 }
 
+.visitor-counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+}
+
+.visitor-counter i {
+    color: var(--primary-light);
+}
+
 .scroll-top {
     position: fixed;
     bottom: var(--spacing-lg);
