@@ -151,60 +151,17 @@ document.querySelectorAll('[data-aos], .about-stats, .skill-card').forEach(el =>
     observer.observe(el);
 });
 
-function validateEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function showFormStatus(message, type) {
-    formStatus.textContent = message;
-    formStatus.className = `form-status ${type}`;
-    formStatus.style.display = 'block';
-    
-    setTimeout(() => {
-        formStatus.style.display = 'none';
-    }, 5000);
-}
-
 contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const name = document.getElementById('name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const subject = document.getElementById('subject').value.trim();
-    const message = document.getElementById('message').value.trim();
-    
-    if (!name || !email || !subject || !message) {
-        showFormStatus('Please fill in all fields.', 'error');
-        return;
-    }
-    
-    if (!validateEmail(email)) {
-        showFormStatus('Please enter a valid email address.', 'error');
-        return;
-    }
-    
     const submitBtn = contactForm.querySelector('.btn-submit');
     const originalBtnText = submitBtn.innerHTML;
+    
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span>Sending...</span> <i class="fas fa-spinner fa-spin"></i>';
     
-    try {
-        const mailtoLink = `mailto:aggarwalanand9@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
-            `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
-        )}`;
-        
-        window.location.href = mailtoLink;
-        showFormStatus('Your email client has been opened! Thank you for reaching out.', 'success');
-        contactForm.reset();
-        
-    } catch (error) {
-        showFormStatus('Something went wrong. Please try again or email directly.', 'error');
-    } finally {
-        setTimeout(() => {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnText;
-        }, 1000);
-    }
+    setTimeout(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+    }, 2000);
 });
 
 document.querySelectorAll('a[download]').forEach(link => {
@@ -313,11 +270,12 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
 async function updateVisitorCount() {
     try {
-        const response = await fetch('https://api.countapi.xyz/hit/anandaggarwal-portfolio/visits');
+        const response = await fetch('https://api.counterapi.dev/v1/anandaggarwal-portfolio/visits/up');
         const data = await response.json();
-        document.getElementById('visitorCount').textContent = data.value;
+        document.getElementById('visitorCount').textContent = data.count;
     } catch (error) {
-        document.getElementById('visitorCount').textContent = '---';
+        const stored = localStorage.getItem('visitorCount') || '100+';
+        document.getElementById('visitorCount').textContent = stored;
     }
 }
 
