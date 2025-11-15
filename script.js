@@ -151,57 +151,28 @@ document.querySelectorAll('[data-aos], .about-stats, .skill-card').forEach(el =>
     observer.observe(el);
 });
 
-contactForm.addEventListener('submit', async (e) => {
+contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
-    const submitBtn = contactForm.querySelector('.btn-submit');
-    const originalBtnText = submitBtn.innerHTML;
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const subject = document.getElementById('subject').value;
+    const message = document.getElementById('message').value;
+    
+    const mailtoLink = `mailto:aggarwal.anand9999@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+        `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+    )}`;
+    
+    window.location.href = mailtoLink;
+    
     const popup = document.getElementById('successPopup');
+    popup.classList.add('show');
     
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span>Sending...</span> <i class="fas fa-spinner fa-spin"></i>';
+    setTimeout(() => {
+        popup.classList.remove('show');
+    }, 3000);
     
-    const formData = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        subject: document.getElementById('subject').value,
-        message: document.getElementById('message').value
-    };
-    
-    try {
-        const response = await fetch('https://formsubmit.co/ajax/aggarwal.anand9999@gmail.com', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                name: formData.name,
-                email: formData.email,
-                subject: formData.subject,
-                message: formData.message,
-                _subject: 'New Portfolio Message from ' + formData.name,
-                _template: 'table'
-            })
-        });
-        
-        if (response.ok) {
-            contactForm.reset();
-            popup.classList.add('show');
-            
-            setTimeout(() => {
-                popup.classList.remove('show');
-            }, 3000);
-        } else {
-            throw new Error('Failed to send');
-        }
-    } catch (error) {
-        alert('Message sent to Anand!\n\nNote: Using fallback method. Your message has been recorded.');
-        contactForm.reset();
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalBtnText;
-    }
+    contactForm.reset();
 });
 
 document.getElementById('successPopup').addEventListener('click', () => {
